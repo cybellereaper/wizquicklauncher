@@ -1,70 +1,39 @@
-# WizQuickLauncher
+# Wizard101 Multi-Client Manager
 
-The WizQuickLauncher application is a command-line tool that automates the login process for multiple Wizard101 accounts. It allows you to log in to multiple accounts simultaneously and position each game window on the screen as desired.
+This project allows you to manage multiple instances of the Wizard101 game client. It automates the process of opening the clients, logging in with different accounts, and positioning the windows on your screen.
 
-### Prerequisites
-Before running the application, ensure you have the following installed:
+## Features
 
-Go programming language (https://golang.org/dl/)
+- Open multiple instances of Wizard101
+- Automatically log in with different accounts
+- Position each game window at specified coordinates
 
-### Installation
-1. Clone the repository or download the source code.
+## Prerequisites
 
-2. Build the application using the following command:
-```bash
-go build
-```
+- Rust (https://www.rust-lang.org/tools/install)
+- Wizard101 installed on your system
 
-### Usage
-The WizQuickLauncher application requires a configuration file in JSON format to specify the accounts and their login details. The configuration file should be provided as a command-line flag.
+## Configuration
 
-Configuration File Format
-The configuration file should have the following format:
+Create a `config.json` file in the root directory of the project with the following structure:
+
 ```json
 {
-  "filePath": "C:\\Path\\To\\Wizard101\\Bin", 
-  "accountsData": [
-    {
-      "username": "user1",
-      "password": "pass1",
-      "xPos": 100,
-      "yPos": 200
-    },
-    {
-      "username": "user2",
-      "password": "pass2",
-      "xPos": 300,
-      "yPos": 400
-    }
-  ]
-}
-```
-"FilePath": The file path to the Wizard101 directory. Make sure to use double backslashes (\\) in the path.
-
-"AccountsData": An array containing login details for each account. Each account should be represented as an array with four elements:
-
-"username": The username of the Wizard101 account.
-"password": The password of the Wizard101 account.
-"x": The x-coordinate position of the game window on the screen.
-"y": The y-coordinate position of the game window on the screen.
-Running the Application
-To run the application, use the following command:
-```bash
-./WizQuickLauncher -config path/to/config.json
-```
-
-Replace path/to/config.json with the actual path to your configuration file.
-
-The application will start logging in to the specified accounts and positioning the game windows on the screen according to the provided coordinates.
-
-### Example Configuration
-```bash
-{
-  "FilePath": "C:\\Users\\admin\\AppData\\Roaming\\Wizard101\\Bin",
-  "AccountsData": [
-    ["wizard1@example.com", "password123", "100", "100"],
-    ["wizard2@example.com", "mypassword", "500", "200"],
-    ["wizard3@example.com", "securepass", "300", "300"]
-  ]
+    "file_path": "C:\\Path\\To\\Wizard101",
+    "accounts_data": [
+        {
+            "username": "your_username_1",
+            "password": "your_password_1",
+            "x_pos": 100,
+            "y_pos": 100
+        },
+        {
+            "username": "your_username_2",
+            "password": "your_password_2",
+            "x_pos": 500,
+            "y_pos": 100
+        }
+        // Add more accounts as needed
+    ]
 }
 ```
