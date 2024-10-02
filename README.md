@@ -1,4 +1,4 @@
-# Wizard101 Multi-Client Manager
+# WizQuickLauncher (Wizard101 Quick Launcher)
 
 This project allows you to manage multiple instances of the Wizard101 game client. It automates the process of opening the clients, logging in with different accounts, and positioning the windows on your screen.
 
