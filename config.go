@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
-// LoadConfig loads the configuration from a file
+// LoadConfig loads the configuration from a file.
 func LoadConfig(path string) (*Config, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -25,6 +27,7 @@ func LoadConfig(path string) (*Config, error) {
 type ConfigGenerator struct {
 	accounts []WizardInfo
 	filePath string
+	reader   *bufio.Reader
 }
 
 // NewConfigGenerator creates a new configuration generator instance
@@ -32,6 +35,7 @@ func NewConfigGenerator() *ConfigGenerator {
 	return &ConfigGenerator{
 		accounts: make([]WizardInfo, 0),
 		filePath: "",
+		reader:   bufio.NewReader(os.Stdin),
 	}
 }
 
@@ -41,8 +45,7 @@ func (cg *ConfigGenerator) RunUI() error {
 	fmt.Println("----------------------------------------------")
 
 	// Get Wizard101 installation path
-	fmt.Print("Enter Wizard101 installation path: ")
-	fmt.Scanln(&cg.filePath)
+	cg.filePath = cg.prompt("Enter Wizard101 installation path: ")
 
 	for {
 		fmt.Println("\nCurrent accounts:", len(cg.accounts))
@@ -51,20 +54,18 @@ func (cg *ConfigGenerator) RunUI() error {
 		fmt.Println("3. Save configuration")
 		fmt.Println("4. Exit")
 
-		var choice int
-		fmt.Print("Choose an option (1-4): ")
-		fmt.Scanln(&choice)
+		choice := cg.prompt("Choose an option (1-4): ")
 
-		switch choice {
-		case 1:
+		switch strings.TrimSpace(choice) {
+		case "1":
 			cg.addAccount()
-		case 2:
+		case "2":
 			cg.listAccounts()
-		case 3:
+		case "3":
 			if err := cg.saveConfig(); err != nil {
 				return err
 			}
-		case 4:
+		case "4":
 			return nil
 		default:
 			fmt.Println("Invalid option")
@@ -76,17 +77,10 @@ func (cg *ConfigGenerator) RunUI() error {
 func (cg *ConfigGenerator) addAccount() {
 	var account WizardInfo
 
-	fmt.Print("Enter username: ")
-	fmt.Scanln(&account.Username)
-
-	fmt.Print("Enter password: ")
-	fmt.Scanln(&account.Password)
-
-	fmt.Print("Enter X position: ")
-	fmt.Scanln(&account.XPos)
-
-	fmt.Print("Enter Y position: ")
-	fmt.Scanln(&account.YPos)
+	account.Username = strings.TrimSpace(cg.prompt("Enter username: "))
+	account.Password = strings.TrimSpace(cg.prompt("Enter password: "))
+	fmt.Sscanf(cg.prompt("Enter X position: "), "%d", &account.XPos)
+	fmt.Sscanf(cg.prompt("Enter Y position: "), "%d", &account.YPos)
 
 	cg.accounts = append(cg.accounts, account)
 	fmt.Println("Account added successfully!")
@@ -118,10 +112,17 @@ func (cg *ConfigGenerator) saveConfig() error {
 		return fmt.Errorf("failed to marshal config: %w", err)
 	}
 
-	if err := os.WriteFile("config.json", data, 0644); err != nil {
+	if err := os.WriteFile("config.json", data, 0o644); err != nil {
 		return fmt.Errorf("failed to write config file: %w", err)
 	}
 
 	fmt.Println("Configuration saved successfully!")
 	return nil
+}
+
+// prompt reads a full line from stdin and trims the trailing newline.
+func (cg *ConfigGenerator) prompt(message string) string {
+	fmt.Print(message)
+	input, _ := cg.reader.ReadString('\n')
+	return strings.TrimSpace(input)
 }
