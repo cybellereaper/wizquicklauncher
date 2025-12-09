@@ -1,0 +1,17 @@
+{
+  "filePath": "C:\\Path\\To\\Wizard101\\Bin", 
+  "accountsData": [
+    {
+      "username": "user1",
+      "password": "pass1",
+      "xPos": 100,
+      "yPos": 200
+    },
+    {
+      "username": "user2",
+      "password": "pass2",
+      "xPos": 300,
+      "yPos": 400
+    }
+  ]
+}
